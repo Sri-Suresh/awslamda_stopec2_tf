@@ -79,3 +79,11 @@ resource "aws_lambda_function" "sritf_lambda_function" {
     timeout = 10
     source_code_hash = "${base64sha256(file("sritf_lambda_function.zip"))}"	
 }
+
+resource "aws_lambda_permission" "sritf_cloudwatch" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.sritf_lambda_function.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.sri-tf-lambda-event.arn
+}
